@@ -13,36 +13,26 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <nav class="navbar fixed-top navbar-light bg-light">
-      <div class="row justify-content-start">
-        <a class="navbar-brand" href="{% url "post_list" %}"><img src="{% static "images/logo.png" %}" width="112" height="50" alt=""></a>
-      </div>
-      <div class="row justify-content-end">
-        <div class="col-16">
-          <a class="btn btn-secondary" href="{% url "post_list" %}" role="button">На главную</a>
-          <a class="btn btn-secondary" href="{% url "post_new" %}" role="button">Создать пост</a>
-          <a class="btn btn-secondary" href="#" role="button">Создать пост</a>
-          <a class="btn btn-secondary" href="#" role="button">Создать пост</a>
-          <a class="btn btn-secondary" href="#" role="button">Создать пост</a>
 
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url "post_list" %}"><img src="{% static "images/logo.png" %}" width="112" height="44" alt=""></a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url "post_list" %}">На главную<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url "post_new" %}">Создать запись</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search">
+          <button class="btn btn btn-outline-secondary my-2 my-sm-0" type="submit">Поиск</button>
+        </form>
       </div>
-
     </nav>
-<!--    <nav class="navbar sticky-top navbar-light bg-light">-->
-<!--      <a class="navbar-brand" href="{% url "post_list" %}"><img src="{% static "images/logo.png" %}" width="112" height="50" alt=""></a>-->
-<!--      <a class="nav-item nav-link" href="#">Features</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--      <a class="nav-item nav-link" href="#">Pricing</a>-->
-<!--    </nav>-->
 
-
-    <div class="content container">
+    <div class="content container" style="padding-top: 30px">
         {% block content %}
         {% endblock %}
     </div>
