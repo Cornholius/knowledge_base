@@ -33,9 +33,8 @@ def post_new(request):
             post.save()
             print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', form.cleaned_data)
             for tag in form.cleaned_data['tags']:
-                Post.tags.slugs = '112233'
                 post.tags.add(tag)
-                print(post.tags.all)
+                print(post.tags.all())
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
