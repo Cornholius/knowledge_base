@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'blog'
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+TAGGIT_CASE_INSENSITIVE = True  # выключаем чувствительность к регистру в Taggit
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
