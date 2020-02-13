@@ -8,13 +8,12 @@ from taggit.models import Tag
 
 def post_list(request, tag_slug=None):
     post_with_tags = Post.objects.all()
-    # tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         post_with_tags = post_with_tags.filter(tags__in=[tag])
         return render(request, 'blog/post_list.html', {'posts': post_with_tags, 'tag': tag})
     else:
-        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
         return render(request, 'blog/post_list.html', {'posts': posts})
 
 
@@ -31,10 +30,8 @@ def post_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-            print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', form.cleaned_data)
             for tag in form.cleaned_data['tags']:
                 post.tags.add(tag)
-                print(post.tags.all())
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
