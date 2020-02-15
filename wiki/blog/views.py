@@ -6,17 +6,22 @@ from django.shortcuts import redirect
 from taggit.models import Tag
 from django.views import View
 from django.contrib import auth
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 class PostListView(View):
 
     def get(self, request, tag_slug=None):
         post_with_tags = Post.objects.all()
+        user = str(request.user)
+        anon = 'AnonymousUser'
+        if user is anon:
+            return redirect('../login')
         if tag_slug:
             tag = get_object_or_404(Tag, slug=tag_slug)
             post_with_tags = post_with_tags.filter(tags__in=[tag])
             return render(request, 'blog/post_list.html', {'posts': post_with_tags, 'tag': tag})
         else:
+            print(user)
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
             return render(request, 'blog/post_list.html', {'posts': posts})
 
@@ -31,6 +36,10 @@ class PostDetailView(View):
 class PostNewView(View):
 
     def get(self, request):
+        user = str(request.user)
+        anon = 'AnonymousUser'
+        if user is anon:
+            return redirect('../login')
         form = PostForm()
         return render(request, 'blog/post_edit.html', {'form': form})
 
