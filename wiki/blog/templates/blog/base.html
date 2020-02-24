@@ -26,14 +26,16 @@
                             <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'login' %}">Логин</a>
+                            {% if request.user.is_authenticated %}
+                                <a class="nav-link" href="{% url 'logout' %}">Выход({{ request.user }})</a>
+                            {% else %}
+                                <a class="nav-link" href="{% url 'login' %}">Логин</a>
+                            {% endif %}
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'logout' %}">Логаут</a>
-                        </li>
+
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
-                        <h4><span class="badge badge-dark">{{ request.user }}</span></h4>
+                        <a class="nav-link" href="{% url 'logout' %}">Выход({{ request.user }})</a>
                         <input class="form-control mr-sm-2" type="search" placeholder="" aria-label="Search">
                         <button class="btn btn btn-outline-secondary my-2 my-sm-0" type="submit">Поиск</button>
                     </form>
