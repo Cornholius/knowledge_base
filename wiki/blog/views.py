@@ -67,6 +67,8 @@ class RegisterView(View):
         new_user = RegisterForm(request.POST)
         if new_user.is_valid():
             new_user.save()
+            username = new_user.cleaned_data.get('username')
+            password = new_user.cleaned_data.get('password2')
             user = auth.authenticate(username=username, password=password)
             auth.login(request, user)
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
