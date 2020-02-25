@@ -270,8 +270,6 @@ iframe {
   height: 100%;
   box-shadow: 0px 0px 0px 0px;
   color: #fff;
-    background: #333333;
-
 }
 
 .input100:focus + .focus-input100 {
