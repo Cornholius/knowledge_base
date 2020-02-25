@@ -61,7 +61,8 @@ class PostNewView(View):
 class RegisterView(View):
 
     def get(self, request):
-        return render(request, 'blog/register.html', {'form': RegisterForm})
+        text_button = 'Зарегистрироваться и войти'
+        return render(request, 'blog/register.html', {'form': RegisterForm, 'button': text_button})
 
     def post(self, request):
         new_user = RegisterForm(request.POST)
@@ -81,7 +82,8 @@ class RegisterView(View):
 class LoginView(View):
 
     def get(self, request):
-        return render(request, 'blog/login.html', {'form': LoginForm})
+        text_button = 'Войти'
+        return render(request, 'blog/login.html', {'form': LoginForm, 'button': text_button})
 
     def post(self, request):
         username = request.POST.get('username')
