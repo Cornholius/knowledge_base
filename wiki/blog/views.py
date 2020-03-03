@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from taggit.models import Tag
 from django.views import View
 from django.contrib import auth
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 
 class PostListView(View):
 
@@ -52,7 +52,7 @@ class PostNewView(View):
             post.save()
             for tag in form.cleaned_data['tags']:
                 post.tags.add(tag)
-                return redirect('post_detail', pk=post.pk)
+            return redirect('post_detail', pk=post.pk)
         else:
             form = PostForm()
             return render(request, 'blog/post_edit.html', {'form': form})
@@ -81,9 +81,12 @@ class RegisterView(View):
 
 class LoginView(View):
 
+    def __init__(self):
+        self.text_button = 'Войти'
+        self.error_text = 'Неверный логин или пароль'
+
     def get(self, request):
-        text_button = 'Войти'
-        return render(request, 'blog/login_or_register.html', {'form': LoginForm, 'button': text_button})
+        return render(request, 'blog/login_or_register.html', {'form': LoginForm, 'button': self.text_button})
 
     def post(self, request):
         username = request.POST.get('username')
@@ -93,6 +96,10 @@ class LoginView(View):
             auth.login(request, user)
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
             return render(request, 'blog/post_list.html', {'posts': posts})
+        else:
+            return render(request, 'blog/login_or_register.html', {'error': self.error_text,
+                                                                   'form': LoginForm,
+                                                                   'button': self.text_button})
 
 
 class LogoutView(View):
