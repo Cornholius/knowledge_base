@@ -47,7 +47,7 @@ class PostNewView(View):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user
+            post.author = request.user.first_name
             post.published_date = timezone.now()
             post.save()
             for tag in form.cleaned_data['tags']:
