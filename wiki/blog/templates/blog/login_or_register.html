@@ -37,6 +37,11 @@
 					<a class="login100-form-btn" href="{% url 'register' %}">Регистрация</a>
 				</div>
                 {% endif %}
+				{% if form.password2 %}
+				<div class="container-login100-form-btn p-t-10">
+					<a class="login100-form-btn" href="{% url 'login' %}">Назад</a>
+				</div>
+                {% endif %}
 			</div>
 		</div>
 	</div>

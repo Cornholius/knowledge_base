@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from taggit.models import Tag
 from django.views import View
 from django.contrib import auth
+from django.contrib.auth.models import User
 
 
 class PostListView(View):
@@ -21,7 +22,6 @@ class PostListView(View):
             post_with_tags = post_with_tags.filter(tags__in=[tag])
             return render(request, 'blog/post_list.html', {'posts': post_with_tags, 'tag': tag})
         else:
-            print(user)
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
             return render(request, 'blog/post_list.html', {'posts': posts})
 
@@ -60,13 +60,23 @@ class PostNewView(View):
 
 class RegisterView(View):
 
+    def __init__(self):
+        self.text_button = 'Зарегистрироваться и войти'
+
+
     def get(self, request):
-        text_button = 'Зарегистрироваться и войти'
-        return render(request, 'blog/login_or_register.html', {'form': RegisterForm, 'button': text_button})
+        return render(request, 'blog/login_or_register.html', {'form': RegisterForm,
+                                                               'button': self.text_button})
 
     def post(self, request):
         new_user = RegisterForm(request.POST)
+        if User.objects.filter(username=request.POST.get('username')).exists():
+            error_text = 'Пользователь с таким логином уже существует'
+            return render(request, 'blog/login_or_register.html', {'form': RegisterForm,
+                                                                   'button': self.text_button,
+                                                                   'error': error_text})
         if new_user.is_valid():
+            print(User.objects.filter(username=request.POST.get('username')))
             new_user.save()
             username = new_user.cleaned_data.get('username')
             password = new_user.cleaned_data.get('password2')
