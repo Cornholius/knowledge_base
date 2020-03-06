@@ -246,11 +246,11 @@ iframe {
   font-family: Montserrat-Bold;
   font-size: 15px;
   line-height: 1.2;
-  color: #fff;
+  color: #543620;
 
   display: block;
   width: 100%;
-  background: #333333;
+  background: #fff;
   height: 50px;
   border-radius: 25px;
   padding: 0 30px 0 53px;
@@ -344,7 +344,7 @@ iframe {
   width: 100%;
   height: 50px;
   border-radius: 25px;
-  background: #333333;
+  background: #543620;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -364,6 +364,7 @@ iframe {
 }
 
 .login100-form-btn::before {
+
   content: "";
   display: block;
   position: absolute;
@@ -373,11 +374,11 @@ iframe {
   border-radius: 25px;
   top: 0;
   left: 0;
-  background: #005bea;
-  background: -webkit-linear-gradient(left, #005bea, #00c6fb);
-  background: -o-linear-gradient(left, #005bea, #00c6fb);
-  background: -moz-linear-gradient(left, #005bea, #00c6fb);
-  background: linear-gradient(left, #005bea, #00c6fb);
+  background: #cccccc;
+  background: -webkit-linear-gradient(left, #fff, #fff);
+  background: -o-linear-gradient(left, #cccccc, #cccccc);
+  background: -moz-linear-gradient(left, #cccccc, #cccccc);
+  background: linear-gradient(left, #cccccc, #cccccc);
   -webkit-transition: all 0.4s;
   -o-transition: all 0.4s;
   -moz-transition: all 0.4s;
@@ -387,7 +388,7 @@ iframe {
 
 .login100-form-btn:hover {
   background: transparent;
-  color: #fff;
+  color: #543620;
 }
 
 .login100-form-btn:hover:before {

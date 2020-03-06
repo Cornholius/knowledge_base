@@ -3,13 +3,13 @@
         <div class="card-body">
             <p class="tags">
                 {% for tag in post.tags.all %}
-                <a class="btn btn-warning btn-sm" href="{% url 'post_list_by_tag' tag.slug %}" role="button">{{ tag.name }}</a>{% if not forloop.last %} {% endif %}
+                <a class="btn btn-sm" style="background: #decdbd; color: #543620" href="{% url 'post_list_by_tag' tag.slug %}" role="button">{{ tag.name }}</a>{% if not forloop.last %} {% endif %}
                 {% endfor %}</p>
             <h6 class="card-subtitle mb-4 text-muted">{{ post.published_date }}</h6>
             <h6 class="card-subtitle mb-4 text-muted">Автор: {{ post.author }}</h6>
             <h2 class="card-title">{{ post.title }}</h2>
             <p class="card-text">{{ post.text|linebreaksbr }}</p>
-            <a class="btn btn-secondary btn-lg active" href="{% url 'post_detail' pk=post.pk %}" role="button" aria-pressed="true">Перейти к записи</a>
+            <a class="btn btn-lg active" style="background: #543620; color: #fff" href="{% url 'post_detail' pk=post.pk %}" role="button" aria-pressed="true">Перейти к записи</a>
         </div>
     </div>
 {% endfor %}
