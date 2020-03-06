@@ -12,6 +12,16 @@ from django.db.models import Q
 class PostListView(View):
 
     def get(self, request, tag_slug=None):
+        ###
+        qwe = User.objects.get(username=request.user)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', qwe)
+        qwe2 = User.objects.all()
+        print(qwe2)
+
+
+
+
+        ###
         post_with_tags = Post.objects.all()
         user = str(request.user)
         anon = 'AnonymousUser'
@@ -27,7 +37,6 @@ class PostListView(View):
 
     def post(self, request):
         search_text = request.POST.get('Search')
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', search_text)
         posts = Post.objects.filter(Q(title__contains=search_text) | Q(text__contains=search_text))
         return render(request, 'blog/post_list.html', {'posts': posts})
 
@@ -53,7 +62,7 @@ class PostNewView(View):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user.first_name
+            post.author = request.user
             post.published_date = timezone.now()
             post.save()
             for tag in form.cleaned_data['tags']:
@@ -123,16 +132,3 @@ class LogoutView(View):
     def get(self, request):
         auth.logout(request)
         return redirect('../login')
-
-
-class SearchListView(View):
-
-    def get(self, request):
-        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-        return render(request, 'blog/post_list.html', {'posts': posts})
-
-    def post(self, request):
-        search_text = request.POST.get('Search')
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', search_text)
-        posts = Post.objects.filter(Q(title=search_text) | Q(text=search_text))
-        return render(request, 'blog/post_list.html', {'posts': posts})
