@@ -1,12 +1,12 @@
 from django.utils import timezone
 from .models import Post
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm, RegisterForm, LoginForm
-from django.shortcuts import redirect
 from taggit.models import Tag
 from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 class PostListView(View):
@@ -24,6 +24,12 @@ class PostListView(View):
         else:
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
             return render(request, 'blog/post_list.html', {'posts': posts})
+
+    def post(self, request):
+        search_text = request.POST.get('Search')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', search_text)
+        posts = Post.objects.filter(Q(title__contains=search_text) | Q(text__contains=search_text))
+        return render(request, 'blog/post_list.html', {'posts': posts})
 
 
 class PostDetailView(View):
@@ -117,3 +123,16 @@ class LogoutView(View):
     def get(self, request):
         auth.logout(request)
         return redirect('../login')
+
+
+class SearchListView(View):
+
+    def get(self, request):
+        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+        return render(request, 'blog/post_list.html', {'posts': posts})
+
+    def post(self, request):
+        search_text = request.POST.get('Search')
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', search_text)
+        posts = Post.objects.filter(Q(title=search_text) | Q(text=search_text))
+        return render(request, 'blog/post_list.html', {'posts': posts})
