@@ -13,10 +13,10 @@ class PostListView(View):
 
     def get(self, request, tag_slug=None):
         ###
-        qwe = User.objects.get(username=request.user)
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', qwe)
-        qwe2 = User.objects.all()
-        print(qwe2)
+        # qwe = User.objects.get(username=request.user)
+        # print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', qwe)
+        # qwe2 = User.objects.all()
+        # print(qwe2)
 
 
 
