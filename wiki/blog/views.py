@@ -7,21 +7,12 @@ from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.http import HttpResponse
 
 
 class PostListView(View):
 
     def get(self, request, tag_slug=None):
-        ###
-        # qwe = User.objects.get(username=request.user)
-        # print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', qwe)
-        # qwe2 = User.objects.all()
-        # print(qwe2)
-
-
-
-
-        ###
         post_with_tags = Post.objects.all()
         user = str(request.user)
         anon = 'AnonymousUser'
@@ -41,10 +32,30 @@ class PostListView(View):
         return render(request, 'blog/post_list.html', {'posts': posts})
 
 
+class FileView(View):
+
+    def get(self,request):
+        print('###########################################')
+        return HttpResponse(request)
+
+
 class PostDetailView(View):
 
-    def get(self, request, pk):
+    def get(self, request, pk=None, file=None):
+        id = pk
         post = get_object_or_404(Post, pk=pk)
+
+        if file:
+            print('OLOLOLOLO')
+
+
+        qwe = Post.objects.get(id=id).document
+        print('!!!!!!!!!!', request)
+        print('@@@@@', request, '@@@@@', qwe)
+
+
+
+
         return render(request, 'blog/post_detail.html', {'post': post})
 
 
@@ -59,7 +70,7 @@ class PostNewView(View):
         return render(request, 'blog/post_edit.html', {'form': form})
 
     def post(self, request):
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
