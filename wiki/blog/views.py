@@ -16,15 +16,16 @@ class PostListView(View):
         post_with_tags = Post.objects.all()
         user = str(request.user)
         anon = 'AnonymousUser'
+        all_tags = Tag.objects.all()
         if user is anon:
             return redirect('../login')
         if tag_slug:
             tag = get_object_or_404(Tag, slug=tag_slug)
             post_with_tags = post_with_tags.filter(tags__in=[tag])
-            return render(request, 'blog/post_list.html', {'posts': post_with_tags, 'tag': tag})
+            return render(request, 'blog/post_list.html', {'posts': post_with_tags, 'tag': tag, 'all_tags': all_tags})
         else:
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-            return render(request, 'blog/post_list.html', {'posts': posts})
+            return render(request, 'blog/post_list.html', {'posts': posts, 'all_tags': all_tags})
 
     def post(self, request):
         search_text = request.POST.get('Search')
