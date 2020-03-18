@@ -1,7 +1,13 @@
 {% extends 'include/base.html' %}
 {% block content %}
     <div class="post">
-        <p class="tags">Tags: {% for tag in post.tags.all %}<a href="{% url 'post_list_by_tag' tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %} {% endfor %}</p>
+        <p class="tags">Tags:
+            {% for tag in post.tags.all %}
+                <a href="{% url 'post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+                {% if not forloop.last %},
+                {% endif %}
+            {% endfor %}
+        </p>
         {% if post.published_date %}
             <div class="date">
                 {{ post.published_date }}
@@ -10,7 +16,10 @@
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaksbr }}</p>
         {% if post.image %}
-            <img src="{{ post.image.url }}">
+            {% load thumbnail %}
+            {% thumbnail post.image "900" as mini_image %}
+                <a href="{{ post.image.url }}"><img src="{{ mini_image.url }}"></a>
+            {% endthumbnail %}
         {% endif %}
         {% if post.document %}
             <a href="{{post.document.url}}">Логин</a>
