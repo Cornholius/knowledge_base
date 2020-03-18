@@ -7,7 +7,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'text', 'tags', 'document')
+        fields = ('title', 'text', 'tags', 'document', 'image')
 
 
 class RegisterForm(UserCreationForm):

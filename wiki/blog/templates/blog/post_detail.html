@@ -9,6 +9,11 @@
         {% endif %}
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaksbr }}</p>
-        <a href="{{post.document.url}}">Логин</a>
+        {% if post.image %}
+            <img src="{{ post.image.url }}">
+        {% endif %}
+        {% if post.document %}
+            <a href="{{post.document.url}}">Логин</a>
+        {% endif %}
     </div>
 {% endblock %}

@@ -15,6 +15,7 @@ class Post(models.Model):
     published_date = models.DateTimeField(blank=True, null=True)
     tags = TaggableManager(through=RuTaggedItem)
     document = models.FileField(upload_to='documents/')
+    image = models.ImageField(upload_to='images/')
 
     def publish(self):
         self.published_date = timezone.now()

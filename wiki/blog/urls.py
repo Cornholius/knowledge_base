@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
-from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+#   добавляем для работы медиа файлов при отключенном дебаге
 from django.conf import settings
+from django.conf.urls.static import static
+
+
 urlpatterns = [
     path('', views.PostListView.as_view(), name='post_list'),
     path('media/documents/', views.FileView.as_view(), name='file'),
@@ -12,6 +14,6 @@ urlpatterns = [
     path('post/<int:pk>/', views.PostDetailView.as_view(), name='post_detail'),
     path('post/new/', views.PostNewView.as_view(), name='post_new'),
     path('tag/<tag_slug>', views.PostListView.as_view(), name='post_list_by_tag')
-]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += staticfiles_urlpatterns()
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   #добавляем для работы медиа
+                                                                    # файлов при отключенном дебаге
+
