@@ -42,21 +42,8 @@ class FileView(View):
 
 class PostDetailView(View):
 
-    def get(self, request, pk=None, file=None):
-        id = pk
+    def get(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
-
-        if file:
-            print('OLOLOLOLO')
-
-
-        qwe = Post.objects.get(id=id).document
-        print('!!!!!!!!!!', request)
-        print('@@@@@', request, '@@@@@', qwe)
-
-
-
-
         return render(request, 'blog/post_detail.html', {'post': post})
 
 
@@ -131,8 +118,7 @@ class LoginView(View):
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-            return render(request, 'blog/post_list.html', {'posts': posts})
+            return redirect('../')
         else:
             return render(request, 'blog/login_or_register.html', {'error': self.error_text,
                                                                    'form': LoginForm,
