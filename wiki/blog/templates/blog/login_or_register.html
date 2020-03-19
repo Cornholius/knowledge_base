@@ -17,38 +17,38 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'login/css/main.css' %}">
 </head>
 <body>
-	<div class="limiter">
-		<div class="container-login100" style="background: #decdbd;">
-			<div class="wrap-login100 p-t-100 p-b-30">
-				<form method="POST" class="login100-form validate-form">{% csrf_token %}
-					<div class="wrap-input100 validate-input m-b-10">
-						<h3><center>{{error}}</center></h3>
-					</div>
-					<div class="wrap-input100 validate-input m-b-10">
-						{{form|crispy}}
-					</div>
-					<div class="container-login100-form-btn p-t-70">
-						<button type="submit" class="login100-form-btn">{{button}}</button>
-					</div>
-				</form>
-                {% if form.password %}
-				<div class="container-login100-form-btn p-t-10">
-					<a class="login100-form-btn" href="{% url 'register' %}">Регистрация</a>
+<div class="limiter">
+	<div class="container-login100" style="background: #decdbd;">
+		<div class="wrap-login100 p-t-100 p-b-30">
+			<form method="POST" class="login100-form validate-form">{% csrf_token %}
+				<div class="wrap-input100 validate-input m-b-10">
+					<h3><center>{{error}}</center></h3>
 				</div>
-                {% endif %}
-				{% if form.password2 %}
-				<div class="container-login100-form-btn p-t-10">
-					<a class="login100-form-btn" href="{% url 'login' %}">Назад</a>
+				<div class="wrap-input100 validate-input m-b-10">
+					{{form|crispy}}
 				</div>
-                {% endif %}
+				<div class="container-login100-form-btn p-t-70">
+					<button type="submit" class="login100-form-btn">{{button}}</button>
+				</div>
+			</form>
+			{% if form.password %}
+			<div class="container-login100-form-btn p-t-10">
+				<a class="login100-form-btn" href="{% url 'register' %}">Регистрация</a>
 			</div>
+			{% endif %}
+			{% if form.password2 %}
+			<div class="container-login100-form-btn p-t-10">
+				<a class="login100-form-btn" href="{% url 'login' %}">Назад</a>
+			</div>
+			{% endif %}
 		</div>
 	</div>
+</div>
 
-	<script src="{% static 'login/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-	<script src="{% static 'login/vendor/bootstrap/js/popper.js' %}"></script>
-	<script src="{% static 'login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-	<script src="{% static 'login/vendor/select2/select2.min.js' %}"></script>
-	<script src="{% static 'login/js/main.js' %}"></script>
+<script src="{% static 'login/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'login/vendor/bootstrap/js/popper.js' %}"></script>
+<script src="{% static 'login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'login/vendor/select2/select2.min.js' %}"></script>
+<script src="{% static 'login/js/main.js' %}"></script>
 </body>
 </html>

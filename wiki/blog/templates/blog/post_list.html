@@ -1,4 +1,19 @@
 {% extends 'include/base.html' %}
+
+{% block all_tags %}
+<div class="shadow p-3 mb-5 bg-white rounded" style="position: sticky; top: 100px;}">
+    <div class="card-body">
+        <h2 class="card-title"><center>Список всех тегов</center></h2>
+        {% for tag in all_tags %}
+        <a class="btn btn-sm" href="{% url 'post_list_by_tag' tag.slug %}" role="button"
+           style="background: #decdbd; color: #543620; padding: 7px; margin: 5px;">{{ tag.name }}
+        </a>
+        {% if not forloop.last %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
 {% block content %}
-    {% include 'include/post.html' %}
+{% include 'include/post.html' %}
 {% endblock %}
