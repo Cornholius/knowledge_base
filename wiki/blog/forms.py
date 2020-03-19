@@ -1,13 +1,20 @@
 from django import forms
-from .models import Post
+from .models import Post, Media
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+
+
+
+class LocationForm(forms.Form):
+    name = forms.CharField(label=u'Локация')
+    photos = forms.ImageField(label=u'Фотографии', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+
 
 class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'text', 'tags', 'document', 'image')
+        fields = ('title', 'text', 'tags')
 
 
 class RegisterForm(UserCreationForm):

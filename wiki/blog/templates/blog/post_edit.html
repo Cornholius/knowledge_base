@@ -3,6 +3,7 @@
 {% block content %}
 <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
     {{ form|crispy }}
+    {{ media|crispy }}
     <button type="submit" class="btn btn-dark btn-lg">Сохранить запись</button>
 </form>
 {% endblock %}

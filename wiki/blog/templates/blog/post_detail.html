@@ -18,9 +18,9 @@
     <p><a class="btn btn-lg active" style="background: #543620; color: #fff" href="" role="button" aria-pressed="true">Редактировать</a>
         <a class="btn btn-lg active" style="background: #543620; color: #fff" href="" role="button" aria-pressed="true">Удалить</a></p>
     {% endif %}
-    {% if post.document %}
-    <p><a class="btn btn-sm active" style="background: #543620; color: #fff" href="{{post.document.url}}" role="button" aria-pressed="true">Скачать {{post.document.name}}</a></p>
-    {% endif %}
+    {% for doc in media %}
+    <p><a class="btn btn-sm active" style="background: #543620; color: #fff" href="{{doc.document.url}}" role="button" aria-pressed="true">Скачать {{doc.document.name}}</a></p>
+    {% endfor %}
     {% if post.image %}
     {% load thumbnail %}
     {% thumbnail post.image "300" as mini_image %}

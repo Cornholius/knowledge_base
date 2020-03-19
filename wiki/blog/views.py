@@ -1,13 +1,14 @@
 from django.utils import timezone
-from .models import Post
+from .models import Post, Media
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import PostForm, RegisterForm, LoginForm
+from .forms import PostForm, RegisterForm, LoginForm, LocationForm
 from taggit.models import Tag
 from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse
+from django.core.files.base import ContentFile
 
 
 class PostListView(View):
@@ -44,7 +45,9 @@ class PostDetailView(View):
 
     def get(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
-        return render(request, 'blog/post_detail.html', {'post': post})
+        media = Media.objects.filter(location_id=pk)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', media)
+        return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
 
 
 class PostNewView(View):
@@ -55,15 +58,22 @@ class PostNewView(View):
         if user is anon:
             return redirect('../login')
         form = PostForm()
-        return render(request, 'blog/post_edit.html', {'form': form})
+        media = LocationForm()
+        return render(request, 'blog/post_edit.html', {'form': form, 'media': media})
 
     def post(self, request):
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST)
+        media = LocationForm(request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
+            for f in request.FILES.getlist('photos'):
+                data = f.read()  # Если файл целиком умещается в памяти
+                photo = Media(location=post)
+                photo.document.save(f.name, ContentFile(data))
+                photo.save()
             for tag in form.cleaned_data['tags']:
                 post.tags.add(tag)
             return redirect('post_detail', pk=post.pk)

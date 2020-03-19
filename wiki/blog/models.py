@@ -25,3 +25,6 @@ class Post(models.Model):
         return self.title
 
 
+class Media(models.Model):
+    document = models.FileField(blank=True)
+    location = models.ForeignKey(Post, related_name='photos', on_delete=models.CASCADE)
