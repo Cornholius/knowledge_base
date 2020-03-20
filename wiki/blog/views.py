@@ -60,26 +60,17 @@ class EditPostView(View):
         return render(request, 'blog/post_edit.html', {'form': form})
 
     def post(self, request, pk=None):
-        form = PostForm(request.POST)
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = Post.objects.get(id=pk)
-            f = PostForm(request.POST, request.FILES)
-            print('!!!!!!!!!!!!!!!!!!!OLOLOLOLO', request.POST.get('tags'))
-            for tag in request.POST.get('tags'):
-                 f.tags.add(tag)
-            if f.has_changed():
-                for i in f.changed_data:
-                    if (f.data[i] != '') and (f.data[i] != None):
-                        post.i = f.data[i]
-                        post.__setattr__(i, f.data[i])
-
+            # for tag in request.POST.get('tags'):
+            #      f.tags.add(tag)
+            if form.has_changed():
+                for i in form.changed_data:
+                    if (form.data[i] != '') and (form.data[i] != None):
+                        post.i = form.data[i]
+                        post.__setattr__(i, form.data[i])
                 post.save()
-            # title = request.POST.get('title')
-            # text = request.POST.get('text')
-            # tags = request.POST.get('tags')
-            # print('!!!!!!!!!!!!!!!!!!!!_tags', tags)
-            # Post.objects.filter(id=pk).update(title=title, text=text)
 
             return redirect('post_detail', pk=pk)
         else:
