@@ -13,7 +13,7 @@ class Post(models.Model):
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
-    tags = TaggableManager(through=RuTaggedItem)
+    tags = TaggableManager(through=RuTaggedItem, blank=True)
     document = models.FileField(blank=True)
     image = models.ImageField(blank=True, upload_to='images/')
 

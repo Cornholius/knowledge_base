@@ -2,7 +2,7 @@ from django.utils import timezone
 from .models import Post, Media
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm, RegisterForm, LoginForm, MediaForm
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -34,19 +34,46 @@ class PostListView(View):
         return render(request, 'blog/post_list.html', {'posts': posts})
 
 
-class FileView(View):
-
-    def get(self,request):
-        print('###########################################')
-        return HttpResponse(request)
-
-
 class PostDetailView(View):
 
     def get(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
         media = Media.objects.filter(post_id=pk)
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
+
+    def post(self, request, pk=None):
+        if request.POST.get('edit') == '':
+
+            return request('post_edit')
+        if request.POST.get('delete') == '':
+            self.delete_post(request)
+        post = get_object_or_404(Post, pk=pk)
+        media = Media.objects.filter(post_id=pk)
+        return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
+
+
+class EditPostView(View):
+
+    def get(self, request, pk=None):
+        edit_user = Post.objects.filter(id=pk)
+        form = PostForm(edit_user.values()[0])
+        return render(request, 'blog/post_edit.html', {'form': form})
+
+    def post(self, request, pk=None):
+        form = PostForm(request.POST)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',request.POST)
+        if form.is_valid():
+            title = request.POST.get('title')
+            text = request.POST.get('text')
+            tags = request.POST.get('tags')
+            print('!!!!!!!!!!!!!!!!!!!!_tags', tags)
+            Post.objects.filter(id=pk).update(title=title, text=text)
+            # for tag in form.cleaned_data['tags']:
+            #     form.tags.add(tag)
+            return redirect('post_detail', pk=pk)
+        else:
+            form = PostForm()
+            return render(request, 'blog/post_edit.html', {'form': form})
 
 
 class PostNewView(View):
@@ -78,6 +105,9 @@ class PostNewView(View):
         else:
             form = PostForm()
             return render(request, 'blog/post_edit.html', {'form': form})
+
+
+
 
 
 class RegisterView(View):

@@ -15,8 +15,12 @@
     <h1>{{ post.title }}</h1>
     <p>{{ post.text|linebreaksbr }}</p>
     {% if post.author == request.user %}
-    <p><a class="btn btn-lg active" style="background: #543620; color: #fff" href="" role="button" aria-pressed="true">Редактировать</a>
-        <a class="btn btn-lg active" style="background: #543620; color: #fff" href="" role="button" aria-pressed="true">Удалить</a></p>
+    <form method="POST">{% csrf_token %}
+        <p>
+            <a class="btn btn-lg active" style="background: #543620; color: #fff" href="{% url 'post_edit' pk=post.pk %}" role="button" aria-pressed="true">Редактировать</a>
+            <a class="btn btn-lg active" style="background: #543620; color: #fff" href="{% url 'post_edit' pk=post.pk %}" role="button" aria-pressed="true">Удалить</a>
+        </p>
+    </form>
     {% endif %}
     {% for doc in media %}
     <p><a class="btn btn-sm active" style="background: #543620; color: #fff" href="{{doc.document.url}}" role="button" aria-pressed="true">Скачать {{doc.document.name}}</a></p>
