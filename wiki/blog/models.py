@@ -27,4 +27,4 @@ class Post(models.Model):
 
 class Media(models.Model):
     document = models.FileField(blank=True)
-    location = models.ForeignKey(Post, related_name='photos', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='media', on_delete=models.CASCADE)

@@ -5,9 +5,8 @@ from django.contrib.auth.models import User
 
 
 
-class LocationForm(forms.Form):
-    name = forms.CharField(label=u'Локация')
-    photos = forms.ImageField(label=u'Фотографии', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+class MediaForm(forms.Form):
+    media = forms.FileField(label='Выберите файлы для загрузки', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
 
 
 class PostForm(forms.ModelForm):
