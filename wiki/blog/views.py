@@ -48,6 +48,9 @@ class PostDetailView(View):
         media = Media.objects.filter(post_id=pk)
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
 
+    def post(self, request):
+        print(request)
+
 
 class EditPostView(View):
 
@@ -73,6 +76,13 @@ class EditPostView(View):
         else:
             form = PostForm()
             return render(request, 'blog/post_edit.html', {'form': form})
+
+
+class DeletePostView(View):
+
+    def get(self, request, pk):
+        post = Post.objects.filter(id=pk).delete()
+        return redirect('/')
 
 
 class PostNewView(View):

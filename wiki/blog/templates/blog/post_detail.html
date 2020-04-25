@@ -18,7 +18,7 @@
     <form method="POST">{% csrf_token %}
         <p>
             <a class="btn btn-lg active" style="background: #543620; color: #fff" href="{% url 'post_edit' pk=post.pk %}" role="button" aria-pressed="true">Редактировать</a>
-            <a class="btn btn-lg active" style="background: #543620; color: #fff" href="{% url 'post_list' pk=post.pk %}" role="button" aria-pressed="true">Удалить</a>
+            <a class="btn btn-lg active" style="background: #543620; color: #fff" href="{% url 'post_delete' pk=post.pk %}" role="button" aria-pressed="true">Удалить</a>
         </p>
     </form>
     {% endif %}
