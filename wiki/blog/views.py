@@ -7,13 +7,20 @@ from django.views import View
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponse
 from django.core.files.base import ContentFile
 
 
 class PostListView(View):
 
     def get(self, request, tag_slug=None):
+        tags_cloud = Tag.objects.in_bulk()  # Начинаем проверку облака тегов на мёртвые теги
+        dead_tags_id = []
+        for i in tags_cloud.keys():  # Получаем id всех тегов в облаке
+            maybe_dead_tags = TaggedItem.objects.filter(tag_id=i)
+            if maybe_dead_tags.exists() is False:  # Если к тегу не привязан пост он едет в список мёртвых
+                dead_tags_id.append(i)
+        for i in dead_tags_id:
+            Tag.objects.filter(id=i).delete()
         post_with_tags = Post.objects.all()
         user = str(request.user)
         anon = 'AnonymousUser'
@@ -41,16 +48,6 @@ class PostDetailView(View):
         media = Media.objects.filter(post_id=pk)
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
 
-    def post(self, request, pk=None):
-        if request.POST.get('edit') == '':
-
-            return request('post_edit')
-        if request.POST.get('delete') == '':
-            self.delete_post(request)
-        post = get_object_or_404(Post, pk=pk)
-        media = Media.objects.filter(post_id=pk)
-        return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
-
 
 class EditPostView(View):
 
@@ -67,7 +64,7 @@ class EditPostView(View):
             #      f.tags.add(tag)
             if form.has_changed():
                 for i in form.changed_data:
-                    if (form.data[i] != '') and (form.data[i] != None):
+                    if (form.data[i] != '') and (form.data[i] is not None):
                         post.i = form.data[i]
                         post.__setattr__(i, form.data[i])
                 post.save()
@@ -109,14 +106,11 @@ class PostNewView(View):
             return render(request, 'blog/post_edit.html', {'form': form})
 
 
-
-
-
 class RegisterView(View):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.text_button = 'Зарегистрироваться и войти'
-
 
     def get(self, request):
         return render(request, 'blog/login_or_register.html', {'form': RegisterForm,
@@ -145,7 +139,8 @@ class RegisterView(View):
 
 class LoginView(View):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.text_button = 'Войти'
         self.error_text = 'Неверный логин или пароль'
 
