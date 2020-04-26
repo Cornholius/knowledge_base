@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 
 
 
-class MediaForm(forms.Form):
-    media = forms.FileField(label='Выберите файлы для загрузки', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+class MediaForm(forms.ModelForm):
 
+    class Meta:
+        model = Media
+        fields = ('document',)
 
 class PostForm(forms.ModelForm):
 

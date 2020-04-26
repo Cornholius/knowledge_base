@@ -12,15 +12,31 @@ from django.core.files.base import ContentFile
 
 class PostListView(View):
 
-    def get(self, request, tag_slug=None):
-        tags_cloud = Tag.objects.in_bulk()  # Начинаем проверку облака тегов на мёртвые теги
+    def test(self):  # получаем имена привязаных тегов, удаляем все привязанные теги к посту, отправляем их в форму
+        tag_id = []
+        tag_name = []
+        tags_in_post = TaggedItem.objects.filter(object_id=109).values()
+        for i in tags_in_post:  # получаем по id поста все привязанные теги
+            tag_id.append(i['tag_id'])
+        for i in tag_id:  # получаем имена всех привязаных тегов и складываем в список
+            tag_names = Tag.objects.filter(id=i).values()
+            for names in tag_names:
+                tag_name.append(names['name'])
+        tag_string = ','.join(tag_name)
+
+    def tags(self):
+        tags_cloud = Tag.objects.in_bulk()  # выгребаем словарь со всеми существующими тегами (id и пост+теги)
         dead_tags_id = []
-        for i in tags_cloud.keys():  # Получаем id всех тегов в облаке
+        for i in tags_cloud.keys():  # Перебираем все теги и ищем пустые
             maybe_dead_tags = TaggedItem.objects.filter(tag_id=i)
             if maybe_dead_tags.exists() is False:  # Если к тегу не привязан пост он едет в список мёртвых
                 dead_tags_id.append(i)
         for i in dead_tags_id:
             Tag.objects.filter(id=i).delete()
+
+    def get(self, request, tag_slug=None):
+        self.tags()
+        self.test()
         post_with_tags = Post.objects.all()
         user = str(request.user)
         anon = 'AnonymousUser'
@@ -54,24 +70,37 @@ class PostDetailView(View):
 
 class EditPostView(View):
 
+    def edit_tags(self, pk=None):  # получаем имена привязаных тегов, удаляем все привязанные теги к посту, отправляем их в форму
+        tag_id = []
+        tag_name = []
+        tags_in_post = TaggedItem.objects.filter(object_id=pk).values()
+        for i in tags_in_post:  # получаем по id поста все привязанные теги
+            tag_id.append(i['tag_id'])
+        for i in tag_id:  # получаем имена всех привязаных тегов и складываем в список
+            tag_names = Tag.objects.filter(id=i).values()
+            for names in tag_names:
+                tag_name.append(names['name'])
+        for i in tag_id:  # удаляем связи тегов с постом по id тегов
+            TaggedItem.objects.filter(tag_id=i).delete()
+        tag_string = ', '.join(tag_name)
+        return tag_string
+
     def get(self, request, pk=None):
         edit_user = Post.objects.filter(id=pk)
         form = PostForm(edit_user.values()[0])
+        form.data['tags'] = self.edit_tags(pk)
         return render(request, 'blog/post_edit.html', {'form': form})
 
     def post(self, request, pk=None):
         form = PostForm(request.POST, request.FILES)
+        print('!1', request.POST)
         if form.is_valid():
             post = Post.objects.get(id=pk)
-            # for tag in request.POST.get('tags'):
-            #      f.tags.add(tag)
-            if form.has_changed():
-                for i in form.changed_data:
-                    if (form.data[i] != '') and (form.data[i] is not None):
-                        post.i = form.data[i]
-                        post.__setattr__(i, form.data[i])
-                post.save()
-
+            post.title = form.data['title']
+            post.text = form.data['text']
+            for tag in form.cleaned_data['tags']:
+                post.tags.add(tag)
+            post.save()
             return redirect('post_detail', pk=pk)
         else:
             form = PostForm()
