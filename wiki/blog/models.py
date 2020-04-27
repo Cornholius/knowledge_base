@@ -4,7 +4,6 @@ from django.utils import timezone
 from taggit.managers import TaggableManager
 from .slug_ru_patch import RuTaggedItem
 
-
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     author_first_name = ''

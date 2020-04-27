@@ -12,18 +12,6 @@ from django.core.files.base import ContentFile
 
 class PostListView(View):
 
-    def test(self):  # получаем имена привязаных тегов, удаляем все привязанные теги к посту, отправляем их в форму
-        tag_id = []
-        tag_name = []
-        tags_in_post = TaggedItem.objects.filter(object_id=109).values()
-        for i in tags_in_post:  # получаем по id поста все привязанные теги
-            tag_id.append(i['tag_id'])
-        for i in tag_id:  # получаем имена всех привязаных тегов и складываем в список
-            tag_names = Tag.objects.filter(id=i).values()
-            for names in tag_names:
-                tag_name.append(names['name'])
-        tag_string = ','.join(tag_name)
-
     def tags(self):
         tags_cloud = Tag.objects.in_bulk()  # выгребаем словарь со всеми существующими тегами (id и пост+теги)
         dead_tags_id = []
@@ -36,7 +24,6 @@ class PostListView(View):
 
     def get(self, request, tag_slug=None):
         self.tags()
-        self.test()
         post_with_tags = Post.objects.all()
         user = str(request.user)
         anon = 'AnonymousUser'
@@ -63,9 +50,6 @@ class PostDetailView(View):
         post = get_object_or_404(Post, pk=pk)
         media = Media.objects.filter(post_id=pk)
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
-
-    def post(self, request):
-        print(request)
 
 
 class EditPostView(View):
