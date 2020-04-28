@@ -3,11 +3,14 @@ from django.db import models
 from django.utils import timezone
 from taggit.managers import TaggableManager
 from .slug_ru_patch import RuTaggedItem
+from django.contrib.auth.models import User
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    author_first_name = ''
-    author_last_name = ''
+    author_full_name = User.objects.filter(username='root').values()[0]
+    author_first_name = author_full_name['first_name']
+    author_last_name = author_full_name['last_name']
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)

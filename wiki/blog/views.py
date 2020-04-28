@@ -5,9 +5,9 @@ from .forms import PostForm, RegisterForm, LoginForm, MediaForm
 from taggit.models import Tag, TaggedItem
 from django.views import View
 from django.contrib import auth
-from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.files.base import ContentFile
+from django.contrib.auth.models import User
 
 
 class PostListView(View):
@@ -36,6 +36,7 @@ class PostListView(View):
             return render(request, 'blog/post_list.html', {'posts': post_with_tags, 'tag': tag, 'all_tags': all_tags})
         else:
             posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+            # author = User.objects.get(id=posts.author_id)
             return render(request, 'blog/post_list.html', {'posts': posts, 'all_tags': all_tags})
 
     def post(self, request):
@@ -48,8 +49,9 @@ class PostDetailView(View):
 
     def get(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
+        author = User.objects.get(username=post.author)
         media = Media.objects.filter(post_id=pk)
-        return render(request, 'blog/post_detail.html', {'post': post, 'media': media})
+        return render(request, 'blog/post_detail.html', {'post': post, 'media': media, 'author': author})
 
 
 class EditPostView(View):
@@ -79,7 +81,6 @@ class EditPostView(View):
 
     def post(self, request, pk=None):
         form = PostForm(request.POST, request.FILES)
-        print('!1', request.POST)
         if form.is_valid():
             post = Post.objects.get(id=pk)
             post.title = form.data['title']
@@ -155,7 +156,6 @@ class RegisterView(View):
                                                                    'button': self.text_button,
                                                                    'error': error_text})
         if new_user.is_valid():
-            print(User.objects.filter(username=request.POST.get('username')))
             new_user.save()
             username = new_user.cleaned_data.get('username')
             password = new_user.cleaned_data.get('password2')
