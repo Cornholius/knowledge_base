@@ -12,7 +12,7 @@
         {{ post.published_date }}
     </div>
     {% endif %}
-    <p>Автор: {{ author.first_name }} {{ author.last_name }}</p>
+    <p>Автор: {{ author.last_name }} {{ author.first_name }}</p>
     <h1>{{ post.title }}</h1>
     <p>{{ post.text|linebreaksbr }}</p>
     {% if post.author == request.user %}

@@ -4,9 +4,15 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
-class MediaForm(forms.Form):
-    media = forms.FileField(label='Выберите файлы для загрузки', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+class MediaForm(forms.ModelForm):
+    # media = forms.FileField(label='Выберите файлы для загрузки', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+    class Meta:
+        model = Media
+        fields = ('document',)
 
+    def __init__(self, *args, **kwargs):
+        super(MediaForm, self).__init__(*args, **kwargs)
+        self.fields['document'].widget.attrs.update({'multiple': 'multiple'})
 
 class PostForm(forms.ModelForm):
 
