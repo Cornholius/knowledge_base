@@ -4,6 +4,9 @@
 <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
     {{ form|crispy }}
     {{ media|crispy }}
-    <button type="submit" class="btn btn-dark btn-lg">Сохранить запись</button>
+    {% for doc in media_files %}
+        <p><a class="btn btn-sm active" style="background: #543620; color: #fff" href="{{doc.document.url}}" role="button" aria-pressed="true">Скачать {{doc.document.name}}</a></p>
+    {% endfor %}
+    <button type="submit" class="btn btn-dark btn-lg" style="background: #543620; color: #fff">Сохранить запись</button>
 </form>
 {% endblock %}

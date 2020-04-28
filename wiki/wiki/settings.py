@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'taggit',
     'sorl.thumbnail',
+    'django_cleanup',
     'blog'
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

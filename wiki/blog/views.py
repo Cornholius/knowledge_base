@@ -71,9 +71,11 @@ class EditPostView(View):
 
     def get(self, request, pk=None):
         edit_user = Post.objects.filter(id=pk)
+        media_files = Media.objects.filter(post_id=pk)
         form = PostForm(edit_user.values()[0])
+        media = MediaForm()
         form.data['tags'] = self.edit_tags(pk)
-        return render(request, 'blog/post_edit.html', {'form': form})
+        return render(request, 'blog/post_edit.html', {'form': form, 'media': media, 'media_files': media_files})
 
     def post(self, request, pk=None):
         form = PostForm(request.POST, request.FILES)
@@ -82,6 +84,11 @@ class EditPostView(View):
             post = Post.objects.get(id=pk)
             post.title = form.data['title']
             post.text = form.data['text']
+            for _ in request.FILES.getlist('media'):
+                data = _.read()  # Если файл целиком умещается в памяти
+                media = Media(post=post)
+                media.document.save(_.name, ContentFile(data))
+                media.save()
             for tag in form.cleaned_data['tags']:
                 post.tags.add(tag)
             post.save()
@@ -95,6 +102,7 @@ class DeletePostView(View):
 
     def get(self, request, pk):
         post = Post.objects.filter(id=pk).delete()
+        media_files = Media.objects.filter(post_id=pk).delete()
         return redirect('/')
 
 
