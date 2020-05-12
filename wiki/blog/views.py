@@ -10,6 +10,13 @@ from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
 
 
+class Media_files():
+
+    def delete_media(self, request):
+        if request.POST['delete']:
+            media_files = Media.objects.filter(document=request.POST['delete']).delete()
+
+
 class PostListView(View):
 
     def tags(self):
@@ -54,14 +61,7 @@ class PostDetailView(View):
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media, 'author': author})
 
     def post(self, request, pk=None):
-        # print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
-        # print(request.POST)
-        # print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
-        if request.POST['delete']:
-            media = Media.objects.filter(document=request.POST['delete']).delete()
-            print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
-            # print(media)
-            print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
+        Media_files.delete_media(self, request)
         return redirect('post_detail', pk=pk)
 
 class EditPostView(View):
@@ -90,6 +90,7 @@ class EditPostView(View):
         return render(request, 'blog/post_edit.html', {'form': form, 'media': media, 'media_files': media_files})
 
     def post(self, request, pk=None):
+        Media_files.delete_media(self, request)
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = Post.objects.get(id=pk)
