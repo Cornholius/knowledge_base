@@ -53,6 +53,16 @@ class PostDetailView(View):
         media = Media.objects.filter(post_id=pk)
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media, 'author': author})
 
+    def post(self, request, pk=None):
+        # print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
+        # print(request.POST)
+        # print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
+        if request.POST['delete']:
+            media = Media.objects.filter(document=request.POST['delete']).delete()
+            print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
+            # print(media)
+            print('', '', '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', '', '', sep='\n')
+        return redirect('post_detail', pk=pk)
 
 class EditPostView(View):
 
@@ -85,11 +95,12 @@ class EditPostView(View):
             post = Post.objects.get(id=pk)
             post.title = form.data['title']
             post.text = form.data['text']
-            for _ in request.FILES.getlist('media'):
-                data = _.read()  # Если файл целиком умещается в памяти
-                media = Media(post=post)
-                media.document.save(_.name, ContentFile(data))
-                media.save()
+            if request.FILES.getlist('media') is not None:
+                for _ in request.FILES.getlist('media'):
+                    data = _.read()  # Если файл целиком умещается в памяти
+                    media = Media(post=post)
+                    media.document.save(_.name, ContentFile(data))
+                    media.save()
             for tag in form.cleaned_data['tags']:
                 post.tags.add(tag)
             post.save()
