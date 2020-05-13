@@ -1,18 +1,14 @@
 from django import forms
-from .models import Post, Media
+from .models import Post
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
 class MediaForm(forms.Form):
-    media = forms.FileField(required=False, label='Выберите файлы для загрузки', widget=forms.FileInput(attrs={'multiple': 'multiple'}))
-    # class Meta:
-    #     model = Media
-    #     fields = ('document',)
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super(MediaForm, self).__init__(*args, **kwargs)
-    #     self.fields['document'].widget.attrs.update({'multiple': 'multiple'})
+    media = forms.FileField(required=False,
+                            label='Выберите файлы для загрузки',
+                            widget=forms.FileInput(attrs={'multiple': 'multiple'}))
+
 
 class PostForm(forms.ModelForm):
 
@@ -32,7 +28,6 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ('username', 'password1', 'password2', 'first_name', 'last_name')
 
-
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'class': 'input100', 'placeholder': 'Логин'})
@@ -50,7 +45,6 @@ class LoginForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ('username', 'password')
-        labels = {'username': ('Writer')}
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)

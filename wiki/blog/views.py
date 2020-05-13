@@ -10,11 +10,11 @@ from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
 
 
-class Media_files():
+class MediaFiles:
 
     def delete_media(self, request):
         if request.POST['delete'] is not None:
-            media_files = Media.objects.filter(document=request.POST['delete']).delete()
+            Media.objects.filter(document=request.POST['delete']).delete()
 
 
 class PostListView(View):
@@ -61,7 +61,7 @@ class PostDetailView(View):
         return render(request, 'blog/post_detail.html', {'post': post, 'media': media, 'author': author})
 
     def post(self, request, pk=None):
-        Media_files.delete_media(self, request)
+        MediaFiles.delete_media(self, request)
         return redirect('post_detail', pk=pk)
 
 
@@ -92,32 +92,34 @@ class EditPostView(View):
 
     def post(self, request, pk=None):
         form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = Post.objects.get(id=pk)
-            post.title = form.data['title']
-            post.text = form.data['text']
-            if request.FILES.getlist('media') is not None:
-                for _ in request.FILES.getlist('media'):
-                    data = _.read()  # Если файл целиком умещается в памяти
-                    media = Media(post=post)
-                    media.document.save(_.name, ContentFile(data))
-                    media.save()
-            for tag in form.cleaned_data['tags']:
-                post.tags.add(tag)
-            post.save()
-
-            return redirect('post_detail', pk=pk)
-        else:
-            Media_files.delete_media(self, request)
-            form = PostForm()
-            return render(request, 'blog/post_edit.html', {'form': form})
+        if 'delete' in request.POST:
+            MediaFiles.delete_media(self, request)
+            return redirect('post_edit', pk=pk)
+        if request.POST['save']:
+            if form.is_valid():
+                post = Post.objects.get(id=pk)
+                post.title = form.data['title']
+                post.text = form.data['text']
+                if request.FILES.getlist('media') is not None:
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', request.FILES.getlist('media'))
+                    for _ in request.FILES.getlist('media'):
+                        data = _.read()  # Если файл целиком умещается в памяти
+                        media = Media(post=post)
+                        media.document.save(_.name, ContentFile(data))
+                        media.save()
+                for tag in form.cleaned_data['tags']:
+                    post.tags.add(tag)
+                post.save()
+                return redirect('post_detail', pk=pk)
+            else:
+                return redirect('post_edit', pk=pk)
 
 
 class DeletePostView(View):
 
     def get(self, request, pk):
-        post = Post.objects.filter(id=pk).delete()
-        media_files = Media.objects.filter(post_id=pk).delete()
+        Post.objects.filter(id=pk).delete()
+        Media.objects.filter(post_id=pk).delete()
         return redirect('/')
 
 
