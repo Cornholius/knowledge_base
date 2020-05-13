@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 class Media_files():
 
     def delete_media(self, request):
-        if request.POST['delete']:
+        if request.POST['delete'] is not None:
             media_files = Media.objects.filter(document=request.POST['delete']).delete()
 
 
@@ -64,6 +64,7 @@ class PostDetailView(View):
         Media_files.delete_media(self, request)
         return redirect('post_detail', pk=pk)
 
+
 class EditPostView(View):
 
     def edit_tags(self, pk=None):  # получаем имена привязаных тегов, удаляем все привязанные теги к посту, отправляем их в форму
@@ -90,7 +91,6 @@ class EditPostView(View):
         return render(request, 'blog/post_edit.html', {'form': form, 'media': media, 'media_files': media_files})
 
     def post(self, request, pk=None):
-        Media_files.delete_media(self, request)
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = Post.objects.get(id=pk)
@@ -105,8 +105,10 @@ class EditPostView(View):
             for tag in form.cleaned_data['tags']:
                 post.tags.add(tag)
             post.save()
+
             return redirect('post_detail', pk=pk)
         else:
+            Media_files.delete_media(self, request)
             form = PostForm()
             return render(request, 'blog/post_edit.html', {'form': form})
 

@@ -5,7 +5,10 @@
     {{ form|crispy }}
     {{ media|crispy }}
     {% for doc in media_files %}
-        <p><a class="btn btn-sm active" style="background: #543620; color: #fff" href="{{doc.document.url}}" role="button" aria-pressed="true">Скачать {{doc.document.name}}</a></p>
+        <p><a class="btn btn-sm active" style="background: #543620; color: #fff; float:left; margin-right:5px;" href="{{doc.document.url}}" role="button" aria-pressed="true">Скачать {{doc.document.name}}</a>
+        <form method="POST">{% csrf_token %}
+            <button type="submit" class="btn btn-dark btn-sm" name="delete" value="{{doc.document.name}}" style="background: #543620; color: #fff">удалить</button></p>
+        </form>
     {% endfor %}
     <button type="submit" class="btn btn-dark btn-lg" style="background: #543620; color: #fff">Сохранить запись</button>
 </form>
