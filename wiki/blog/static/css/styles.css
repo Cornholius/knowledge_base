@@ -1,0 +1,51 @@
+.tag-panel {
+    position: sticky;
+    top: 80px;
+}
+
+.tag-name {
+    background: #decdbd;
+    color: #543620;
+    margin: 5px;
+}
+
+.navbar-toggler-icon {
+    background-image: url(../images/logo.png) !important;
+}
+
+.btn-exit-or-login {
+    margin-left: 10px;
+    background: #decdbd;
+    color: #543620;
+    border:none
+}
+
+.search-btn {
+    background: #decdbd;
+    color: #543620;
+    border:none;
+    border-top-right-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
+}
+
+.search-area {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
+    margin-right: 0rem!important;
+}
+
+.link-text {
+    font-weight: bold;
+    color: #543620;
+    font-size: 18px;
+}
+
+@media (min-width: 769px) {
+  .invisible-on-pc { display: none;}
+}
+
+@media (max-width: 768px) {
+  .invisible-on-mobile { display: none;}
+}

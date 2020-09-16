@@ -1,9 +1,9 @@
 {% for post in posts %}
-<div class="shadow p-3 mb-5 bg-white rounded">
+<div class="shadow p-3 mb-5 bg-white rounded" style="overflow: hidden;">
     <div class="card-body">
         <p class="tags">
             {% for tag in post.tags.all %}
-            <a class="btn btn-sm" style="background: #decdbd; color: #543620" href="{% url 'post_list_by_tag' tag.slug %}" role="button">{{ tag.name }}</a>{% if not forloop.last %} {% endif %}
+            <a class="tag-name btn btn-sm" href="{% url 'post_list_by_tag' tag.slug %}" role="button">{{ tag.name }}</a>{% if not forloop.last %} {% endif %}
             {% endfor %}</p>
         <h6 class="card-subtitle mb-3 text-muted">{{ post.published_date }}</h6>
         <h6 class="card-subtitle mb-2 text-muted">Автор: {{ post.author.first_name }} {{ post.author.last_name }}</h6>
