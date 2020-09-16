@@ -101,7 +101,6 @@ class EditPostView(View):
                 post.title = form.data['title']
                 post.text = form.data['text']
                 if request.FILES.getlist('media') is not None:
-                    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', request.FILES.getlist('media'))
                     for _ in request.FILES.getlist('media'):
                         data = _.read()  # Если файл целиком умещается в памяти
                         media = Media(post=post)
@@ -140,6 +139,7 @@ class PostNewView(View):
             post = form.save(commit=False)
             post.author = request.user
             post.published_date = timezone.now()
+            print('##########################', post.author)
             post.save()
             for _ in request.FILES.getlist('media'):
                 data = _.read()  # Если файл целиком умещается в памяти
